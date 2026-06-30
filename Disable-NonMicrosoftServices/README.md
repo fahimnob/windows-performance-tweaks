@@ -1,0 +1,93 @@
+============================================================
+ README - Clean Boot Service Manager (msconfig style)
+============================================================
+
+WHAT THESE FILES DO
+------------------------------------------------------------
+This mimics msconfig's:
+  Services tab -> "Hide all Microsoft services" -> "Disable all"
+
+There are 2 files:
+
+1) Disable-NonMicrosoftServices.bat
+   - Backs up ALL current service settings to your Desktop
+     (file named ServiceBackup_<date>_<time>.csv)
+   - Then disables every service that is NOT signed by
+     Microsoft (third-party services only). Microsoft
+     services are left untouched, same as msconfig.
+
+2) Restore-Services.bat
+   - Undoes the changes by restoring services back to the
+     settings saved in the backup CSV.
+   - Automatically finds the newest backup file on your
+     Desktop, OR you can drag a specific backup CSV file
+     on top of this .bat file to restore from that one.
+
+No separate PowerShell (.ps1) files are needed - everything
+is built into these two .bat files.
+
+
+HOW TO USE
+------------------------------------------------------------
+STEP 1 - Disable non-Microsoft services
+  1. Double-click "Disable-NonMicrosoftServices.bat"
+  2. Click "Yes" on the Windows admin (UAC) prompt
+  3. Wait for it to finish - it will list every service it
+     disabled, then pause so you can read the results
+  4. Restart your computer
+
+STEP 2 - Test / troubleshoot
+  Use your PC normally and see if your issue is gone. This
+  is the standard "clean boot" troubleshooting method.
+
+STEP 3 - Undo / restore everything back to normal
+  1. Double-click "Restore-Services.bat"
+  2. Click "Yes" on the UAC prompt
+  3. It will automatically find your latest backup on the
+     Desktop and restore every service
+  4. Restart your computer
+
+
+IMPORTANT NOTES / WARNINGS
+------------------------------------------------------------
+- Run these as Administrator (they will prompt automatically,
+  you do not need to do anything special).
+
+- This DISABLES third-party services - this can include:
+    * Antivirus software
+    * Audio / graphics driver services
+    * Backup software
+    * Game launchers (Steam, etc.)
+    * VPN software
+  This is expected and matches what msconfig's "Disable all"
+  does. Do not leave these disabled permanently - this is a
+  TEMPORARY troubleshooting step only.
+
+- DO NOT delete the ServiceBackup_*.csv file on your Desktop
+  until you have restored your services and confirmed
+  everything works normally again.
+
+- If you run Disable-NonMicrosoftServices.bat more than once,
+  it will create a new backup file each time. Restore-Services
+  always uses the NEWEST one unless you drag a specific file
+  onto it.
+
+- A restart is required after running either script for
+  changes to fully take effect.
+
+
+TESTING SAFELY (RECOMMENDED)
+------------------------------------------------------------
+If you want to try this without any risk to your real PC:
+  1. Turn on "Windows Sandbox" (Windows 10/11 Pro/Enterprise):
+     Start menu -> search "Turn Windows features on or off"
+     -> check "Windows Sandbox" -> restart
+  2. Open Windows Sandbox
+  3. Drag both .bat files into the Sandbox window
+  4. Run them there - the Sandbox resets completely when
+     closed, so nothing affects your real system.
+
+
+============================================================
+END OF README
+============================================================
