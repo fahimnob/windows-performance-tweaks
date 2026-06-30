@@ -17,6 +17,9 @@ if %errorlevel% NEQ 0 (
 
 cd /d "%~dp0"
 
+:: Make the whole console text green (foreground = Light Green on black)
+color 0A
+
 echo ============================================
 echo  Disabling all non-Microsoft services
 echo  (mimics msconfig clean boot)
@@ -33,7 +36,7 @@ echo Creating backup file: %BACKUPFILE%
 echo Service Name,Display Name,Original Status >> "%BACKUPFILE%"
 
 :: Get all services and backup their status
-for /f "tokens=*" %%A in ('powershell -NoProfile -Command "Get-Service | ForEach-Object { $_.Name + ',"' + $_.DisplayName + '",' + $_.Status }"') do (
+for /f "tokens=*" %%A in ('powershell -NoProfile -Command "Get-Service | ForEach-Object { $_.Name + ',"' + $_.DisplayName + '," + $_.Status }"') do (
     echo %%A >> "%BACKUPFILE%"
 )
 
@@ -49,7 +52,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$DisabledCount = 0; " ^
     "foreach ($Service in $Services) { " ^
     "  try { " ^
-    "    $RegPath = \"HKLM:\SYSTEM\CurrentControlSet\Services\$($Service.Name)\"; " ^
+    "    $RegPath = \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\$($Service.Name)\"; " ^
     "    $ImagePath = (Get-ItemProperty $RegPath -Name ImagePath -ErrorAction SilentlyContinue).ImagePath; " ^
     "    $IsMicrosoft = $ImagePath -match '(System32|SysWOW64|Windows|WinSxS)' -or $Service.Name -match '^(Microsoft|Windows|Intel|NVIDIA|AMD)'; " ^
     "    if (-not $IsMicrosoft -and $ImagePath) { " ^
@@ -62,8 +65,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    } " ^
     "  } catch { " ^
     "  } " ^
-    "} " ^
-    "Write-Host \"\`n========================================\`nTotal services disabled: $DisabledCount\`n========================================\`"
+    " } " ^
+    "Write-Host \"`n========================================`nTotal services disabled: $DisabledCount`n========================================`"
 
 echo.
 echo ============================================
@@ -80,4 +83,8 @@ echo  To restore services later, run:
 echo  Restore-Services.bat
 echo ============================================
 echo.
+
+:: Restore console color to default (light gray on black)
+color 07
+
 pause
