@@ -1,7 +1,7 @@
 # Windows Performance & Optimization Tweaks
 ### 🚀 Created by FAHIM
 
-A highly streamlined collection of administrative batch (`.bat`) scripts designed to maximize network throughput, minimize system latency, and strip away sluggish Windows UI animations without sacrificing essential visual clarity or accessibility.
+A highly streamlined collection of administrative batch (`.bat`) scripts designed to maximize network throughput, minimize system latency, and strip away sluggish Windows UI animations without sacrificing essential visual clarity.
 
 ---
 
@@ -28,6 +28,54 @@ Fine-tunes background scheduling priorities to feed resources directly to active
 * Disables background Windows Telemetry tracking and diagnostic data uploads.
 * Shuts down Windows Hibernation (`powercfg -h off`) to eliminate constant background disk writes.
 * Drastically reduces hardware polling input lag (`MouseHoverTime` and keyboard delays).
+
+---
+
+## 🔧 Disable Non-Microsoft Services
+
+Disabling unnecessary third-party services can significantly improve system responsiveness and reduce background resource consumption. This optimization removes bloatware services while preserving core Windows functionality.
+
+### Benefits:
+* **Reduced CPU Usage:** Eliminates unnecessary background processes competing for processor cycles.
+* **Faster Boot Times:** Fewer services to initialize at startup.
+* **Lower Memory Footprint:** Reclaims RAM consumed by dormant third-party services.
+* **Improved Responsiveness:** More resources available for active applications and games.
+
+### Safe Services to Disable:
+* **HP, Canon, Epson Printer Services** (unless you actively use the printer)
+* **Adobe Update Services** (manually update when needed)
+* **OneDrive** (if using alternative cloud storage)
+* **Cortana/Search Indexing** (if not using voice commands or Windows Search)
+* **Nvidia/AMD Telemetry** (GPU driver analytics)
+* **Intel Management Engine** (IME) — *use caution, affects hardware monitoring*
+* **Bloatware OEM Services** (manufacturer-specific utilities)
+
+### How to Disable Services (via Services.msc):
+1. Press `Win + R` and type `services.msc`, then press Enter.
+2. Right-click the service you want to disable.
+3. Select **Properties** → Set **Startup type** to `Disabled`.
+4. Click **Stop** to immediately halt the service.
+5. Click **Apply** → **OK**.
+
+### Command-Line Method (Admin PowerShell):
+```powershell
+# Disable a specific service
+Set-Service -Name "ServiceName" -StartupType Disabled
+Stop-Service -Name "ServiceName"
+
+# Example: Disable OneDrive
+Set-Service -Name "OneDrive" -StartupType Disabled
+Stop-Service -Name "OneDrive"
+```
+
+### ⚠️ Critical Warning:
+**Do NOT disable these essential Microsoft services:**
+* Windows Update (`wuauserv`)
+* Windows Defender (`WinDefend`)
+* Network Discovery (`FDResPub`)
+* Windows Event Log (`eventlog`)
+* Plug and Play (`PlugPlay`)
+* Device Setup Manager (`DeviceInstall`)
 
 ---
 
